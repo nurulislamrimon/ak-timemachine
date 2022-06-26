@@ -3,20 +3,49 @@ import { useForm } from 'react-hook-form';
 
 const Home = () => {
     const [time, setTime] = useState([]);
+    const [projects, setProjects] = useState([]);
     const [tHours, setTHours] = useState([]);
     const [tMinutes, setTMinutes] = useState([]);
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const onSubmit = (data) => {
         setTime([...time, data]);
         setTHours([...tHours, data.hours]);
         setTMinutes([...tMinutes, data.minutes]);
+        const isAlreadyInProject = projects.find(p => p === data.projectName)
+        if (isAlreadyInProject) {
+            setProjects([...projects])
+        } else { setProjects([...projects, data.projectName]) }
         reset();
     }
-    console.log(tMinutes.reduce((a, b) => parseInt(a) + parseInt(b), 0));
+
+    const clearAll = () => {
+        const confirm = window.confirm('Are you sure want to reset all data?');
+        if (confirm) {
+            setTime([]);
+            setTHours([]);
+            setTMinutes([]);
+            setProjects([]);
+        }
+    }
+
     return (
         <div className={`grid ${time.length > 0 && 'grid-cols-3'}`}>
             <form onSubmit={handleSubmit(onSubmit)} className=' grid gap-5'>
+                {/* project name input */}
+                <div className="form-control w-full max-w-xs mx-auto">
+                    <label htmlFor="projectName" className="label">Project Name</label>
+                    <input type="text" {
+                        ...register("projectName", {
+                            required: true
+
+                        })} placeholder="Enter projectName here" className="input input-bordered w-full" />
+
+                    {errors.projectName?.type === 'required' &&
+                        <label className="label">
+                            <span className="label-text-alt text-red-500">Please enter a project name</span>
+                        </label>}
+                </div>
                 {/* title input */}
                 <div className="form-control w-full max-w-xs mx-auto">
                     <label htmlFor="title" className="label">Title</label>
@@ -34,37 +63,27 @@ const Home = () => {
                 {/* hours input */}
                 <div className="form-control w-full max-w-xs mx-auto">
                     <label htmlFor="hours" className="label">Hours</label>
-                    <input type="text" {
+                    <input type="number" {
                         ...register("hours", {
-                            required: true,
-                            pattern: /^[0-9]*$/
+                            required: true
                         })} placeholder="Enter hours here" className="input input-bordered w-full" />
 
                     {errors.hours?.type === 'required' &&
                         <label className="label">
                             <span className="label-text-alt text-red-500">Please enter hours</span>
                         </label>}
-                    {errors.hours?.type === 'pattern' &&
-                        <label className="label">
-                            <span className="label-text-alt text-red-500">Please enter a valid number!</span>
-                        </label>}
                 </div>
                 {/* minutes input */}
                 <div className="form-control w-full max-w-xs mx-auto">
                     <label htmlFor="minutes" className="label">Minutes</label>
-                    <input type="text" {
+                    <input type="number" {
                         ...register("minutes", {
-                            required: true,
-                            pattern: /^[0-9]*$/
+                            required: true
                         })} placeholder="Enter minutes here" className="input input-bordered w-full" />
 
                     {errors.minutes?.type === 'required' &&
                         <label className="label">
                             <span className="label-text-alt text-red-500">Please enter a minutes</span>
-                        </label>}
-                    {errors.minutes?.type === 'pattern' &&
-                        <label className="label">
-                            <span className="label-text-alt text-red-500">Please enter a valid number!</span>
                         </label>}
                 </div>
 
@@ -73,12 +92,17 @@ const Home = () => {
             {
                 time.length > 0 && <div className='text-center'>
                     {/* show times */}
-                    {time.map((t, index) =>
-                        <div key={index}>
-                            <h3 className='text-xl mt-5'> {index + 1}. {t.title} - {t.hours}<small>hours</small>, {t.minutes}<small>minutes</small></h3>
-                        </div>)
-                    }
-                    <button className='btn mt-5 hover:bg-red-600' onClick={() => setTime([])}>Clear all data</button>
+                    {projects?.map((p, index) => <div key={index}>
+                        <h1 className='text-2xl mt-5'>Project: {p}</h1>
+                        {time.map((t, index) =>
+                            t.projectName === p &&
+                            <div key={index}>
+                                <h3 className='text-xl mt-2'> {index + 1}. {t.title} - {t.hours}<small>hours</small>, {t.minutes}<small>minutes</small></h3>
+                            </div>)
+                        }
+                    </div>)}
+
+                    <button className='btn mt-5 hover:bg-red-600' onClick={clearAll}>Clear all data</button>
                 </div>}
             <div className='text-center'>
                 {
