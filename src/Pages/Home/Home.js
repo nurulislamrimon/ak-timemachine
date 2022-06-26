@@ -7,6 +7,9 @@ const Home = () => {
     const [tHours, setTHours] = useState([]);
     const [tMinutes, setTMinutes] = useState([]);
     const [payment, setPayment] = useState(0);
+    const hourlyRate = useRef(0);
+    const totalHours = useRef(0);
+    const totalMinutes = useRef(0);
     // form hook
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
@@ -20,11 +23,11 @@ const Home = () => {
         } else { setProjects([...projects, data.projectName]) }
         reset();
         setPayment(0)
+        hourlyRate.current.value = 0;
     }
     const totalPayment = e => {
-        setPayment((e.target.value) * (Math.floor((tHours.reduce((a, b) => parseInt(a) + parseInt(b), 0) + (tMinutes.reduce((a, b) => parseInt(a) + parseInt(b), 0) / 60)))) + (e.target.value / 60) * (tMinutes.reduce((a, b) => parseInt(a) + parseInt(b), 0) % 60));
+        setPayment(isNaN((parseInt(totalHours.current.innerText) * parseFloat(hourlyRate.current.value)) + (parseFloat(hourlyRate.current.value) / 60) * parseInt(totalMinutes.current.innerText)) ? 0 : (parseInt(totalHours.current.innerText) * parseFloat(hourlyRate.current.value)) + (parseFloat(hourlyRate.current.value) / 60) * parseInt(totalMinutes.current.innerText))
     }
-
     const clearAll = () => {
         const confirm = window.confirm('Are you sure want to reset all data?');
         if (confirm) {
@@ -115,13 +118,13 @@ const Home = () => {
                     time.length > 0 &&
                     <div>
                         <h1 className='text-2xl font-bold'>Total time</h1>
-                        <h3 className='text-xl '><span className='text-teal-600 font-bold'>{Math.floor((tHours.reduce((a, b) => parseInt(a) + parseInt(b), 0) + (tMinutes.reduce((a, b) => parseInt(a) + parseInt(b), 0) / 60)))}</span>h</h3>
-                        <h3 className='text-xl '><span className='text-teal-600 font-bold'> {tMinutes.reduce((a, b) => parseInt(a) + parseInt(b), 0) % 60}</span>min</h3>
+                        <h3 className='text-xl '><span ref={totalHours} className='text-teal-600 font-bold'>{Math.floor((tHours.reduce((a, b) => parseInt(a) + parseInt(b), 0) + (tMinutes.reduce((a, b) => parseInt(a) + parseInt(b), 0) / 60)))}</span>h</h3>
+                        <h3 className='text-xl '><span ref={totalMinutes} className='text-teal-600 font-bold'> {tMinutes.reduce((a, b) => parseInt(a) + parseInt(b), 0) % 60}</span>min</h3>
 
                         {/* hourlyRate input */}
                         <div className="form-control w-full max-w-xs mx-auto">
                             <label htmlFor="hourlyRate" className="label">Payment of an hour</label>
-                            <input onChange={totalPayment} type="number" placeholder="Enter hourly rate here" className="input input-bordered w-full" />
+                            <input onChange={totalPayment} ref={hourlyRate} type="number" placeholder="Enter hourly rate here" className="input input-bordered w-full" />
                         </div>
                         <h1 className='text-3xl'>Your total payment: ${payment?.toFixed(2)}</h1>
                     </div>
