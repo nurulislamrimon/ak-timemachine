@@ -42,13 +42,18 @@ const Home = () => {
         <div className={`grid ${time.length > 0 && 'grid-cols-3'}`}>
             <form onSubmit={handleSubmit(onSubmit)} className=' grid gap-5'>
                 {/* project name input */}
-                <div className="form-control w-full max-w-xs mx-auto">
+                <div className="form-control w-full max-w-xs mx-auto flex justify-center ">
                     <label htmlFor="projectName" className="label">Project Name</label>
-                    <input type="text" {
-                        ...register("projectName", {
-                            required: true
+                    <div className='flex'>
+                        <input type="text" {
+                            ...register("projectName", {
+                                required: true
 
-                        })} placeholder="Enter projectName here" className="input input-bordered w-full" />
+                            })} placeholder="Enter projectName here" className="input w-full" />
+                        <select name="selectProjectName">
+                            {projects.map(p => <option>{p}</option>)}
+                        </select>
+                    </div>
 
                     {errors.projectName?.type === 'required' &&
                         <label className="label">
