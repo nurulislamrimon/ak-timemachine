@@ -15,6 +15,10 @@ const Home = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const onSubmit = (data) => {
+        if (!data.projectName) {
+            data.projectName = 'No Name';
+        }
+        console.log(data);
         setTime([...time, data]);
         setTHours([...tHours, data.hours]);
         setTMinutes([...tMinutes, data.minutes]);
@@ -26,7 +30,7 @@ const Home = () => {
         }
         reset();
         setPayment(0);
-        hourlyRate.current.value = 0;
+        hourlyRate.current.value = '';
     }
     const totalPayment = e => {
         setPayment(isNaN((parseInt(totalHours.current.innerText) * parseFloat(hourlyRate.current.value)) + (parseFloat(hourlyRate.current.value) / 60) * parseInt(totalMinutes.current.innerText)) ? 0 : (parseInt(totalHours.current.innerText) * parseFloat(hourlyRate.current.value)) + (parseFloat(hourlyRate.current.value) / 60) * parseInt(totalMinutes.current.innerText))
