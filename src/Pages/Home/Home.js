@@ -51,7 +51,7 @@ const Home = () => {
                 <div className="form-control w-full max-w-xs mx-auto flex justify-center ">
                     <label htmlFor="projectName" className="label">Project Name</label>
                     <div className='flex border rounded-lg'>
-                        <input type="text" {
+                        <input type="text" autoComplete='on' autoFocus {
                             ...register("projectName", {
                                 // required: true
 
@@ -66,7 +66,7 @@ const Home = () => {
                 {/* title input */}
                 <div className="form-control w-full max-w-xs mx-auto">
                     <label htmlFor="title" className="label">Title</label>
-                    <input type="text" {
+                    <input type="text" autoComplete='on' {
                         ...register("title", {
                             // required: true
 
@@ -80,7 +80,7 @@ const Home = () => {
                 {/* hours input */}
                 <div className="form-control w-full max-w-xs mx-auto">
                     <label htmlFor="hours" className="label justify-start">Hours <span className='text-red-600'>*</span></label>
-                    <input type="number" {
+                    <input type="number" autoComplete='off' {
                         ...register("hours", {
                             required: true
                         })} placeholder="Enter hours here" className="input input-bordered w-full" />
@@ -93,7 +93,7 @@ const Home = () => {
                 {/* minutes input */}
                 <div className="form-control w-full max-w-xs mx-auto">
                     <label htmlFor="minutes" className="label justify-start">Minutes <span className='text-red-600'>*</span></label>
-                    <input type="number" {
+                    <input type="number" autoComplete='off' {
                         ...register("minutes", {
                             required: true
                         })} placeholder="Enter minutes here" className="input input-bordered w-full" />
@@ -149,7 +149,7 @@ const Home = () => {
                         {/* hourlyRate input */}
                         <div className="form-control w-full max-w-xs mx-auto mt-5">
                             <label htmlFor="hourlyRate" className="label">Payment for an hour</label>
-                            <input onChange={totalPayment} ref={hourlyRate} type="number" placeholder="Enter hourly rate here" className="input input-bordered w-full" />
+                            <input onChange={totalPayment} ref={hourlyRate} type="number" autoFocus placeholder="Enter hourly rate here" className="input input-bordered w-full" />
                         </div>
                         <h1 className='text-3xl text-center'>Your total payment: ${payment?.toFixed(2)}</h1>
                     </div>
