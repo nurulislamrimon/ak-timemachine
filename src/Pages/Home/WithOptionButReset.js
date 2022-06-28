@@ -5,7 +5,7 @@ const Home = () => {
     const [projects, setProjects] = useState([]);
     const [projectsNames, setProjectsNames] = useState([]);
     const [payment, setPayment] = useState(0);
-    // const prNameInput = useRef('');
+    const prNameInput = useRef('');
     const hourlyRate = useRef(0);
     const totalHours = useRef(0);
     const totalMinutes = useRef(0);
@@ -13,9 +13,9 @@ const Home = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
 
-    // const handleProjectName = e => {
-    //     prNameInput.current.value = e?.target?.value;
-    // }
+    const handleProjectName = e => {
+        prNameInput.current.value = e?.target?.value;
+    }
 
     const onSubmit = (data) => {
         data.id = projects.length;
@@ -33,9 +33,9 @@ const Home = () => {
         } else {
             setProjectsNames([...projectsNames, data.projectName])
         }
-        reset();
         setPayment(0);
         hourlyRate.current.value = '';
+        reset();
     }
 
     const totalPayment = e => {
@@ -74,7 +74,7 @@ const Home = () => {
                 <div className="form-control w-full max-w-xs mx-auto flex justify-center ">
                     <label htmlFor="projectName" className="label">Project Name</label>
                     <div className='flex border rounded-lg'>
-                        <input type="text" {
+                        <input type="text" autoFocus autoComplete='off' {
                             ...register("projectName", {
                                 // required: true
 
@@ -85,13 +85,14 @@ const Home = () => {
                         <label className="label">
                             <span className="label-text-alt text-red-500">Please enter a project name</span>
                         </label>}
-
-                    {/* <select onChange={handleProjectName} name="projectOption" id="">
-                        <option>Select an option</option>
-                        {projectsNames.map((p, index) =>
-                            <option key={index} value={p}>{p}</option>
-                        )}
-                    </select> */}
+                    {projectsNames.length > 0 &&
+                        <select onChange={handleProjectName} name="projectOption" id="">
+                            <option>Select an option</option>
+                            {projectsNames.map((p, index) =>
+                                <option key={index} value={p}>{p}</option>
+                            )}
+                        </select>
+                    }
 
                 </div>
                 {/* title input */}
