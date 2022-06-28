@@ -15,10 +15,12 @@ const Home = () => {
     // form hook
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    // console.log(projects);
     const onSubmit = (data) => {
         if (!data.projectName) {
             data.projectName = 'No Name';
+        }
+        if (!data.title) {
+            data.title = 'Untitled';
         }
         setTime([...time, data]);
         setTHours([...tHours, data.hours]);
@@ -57,12 +59,7 @@ const Home = () => {
                             ...register("projectName", {
                                 // required: true
 
-                            })} placeholder="Enter projectName here" className="input w-full" />
-                        {/* {projects.length > 0 &&
-                            <select {...register('sProName')}>
-                                {projects.map((p, index) =>
-                                    <option key={index} value={p}>{p}</option>)}
-                            </select>} */}
+                            })} placeholder="Enter project name here" className="input w-full" />
                     </div>
 
                     {errors.projectName?.type === 'required' &&
@@ -75,7 +72,7 @@ const Home = () => {
                     <label htmlFor="title" className="label">Title</label>
                     <input type="text" {
                         ...register("title", {
-                            required: true
+                            // required: true
 
                         })} placeholder="Enter title here" className="input input-bordered w-full" />
 
@@ -86,7 +83,7 @@ const Home = () => {
                 </div>
                 {/* hours input */}
                 <div className="form-control w-full max-w-xs mx-auto">
-                    <label htmlFor="hours" className="label">Hours</label>
+                    <label htmlFor="hours" className="label justify-start">Hours <span className='text-red-600'>*</span></label>
                     <input type="number" {
                         ...register("hours", {
                             required: true
@@ -99,7 +96,7 @@ const Home = () => {
                 </div>
                 {/* minutes input */}
                 <div className="form-control w-full max-w-xs mx-auto">
-                    <label htmlFor="minutes" className="label">Minutes</label>
+                    <label htmlFor="minutes" className="label justify-start">Minutes <span className='text-red-600'>*</span></label>
                     <input type="number" {
                         ...register("minutes", {
                             required: true
