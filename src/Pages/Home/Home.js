@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 const Home = () => {
     const [time, setTime] = useState([]);
     const [projects, setProjects] = useState([]);
+    const [newdt, setnewdt] = useState([]);
     const [tHours, setTHours] = useState([]);
     const [tMinutes, setTMinutes] = useState([]);
     const [payment, setPayment] = useState(0);
@@ -14,11 +15,11 @@ const Home = () => {
     // form hook
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
+    // console.log(projects);
     const onSubmit = (data) => {
         if (!data.projectName) {
             data.projectName = 'No Name';
         }
-        console.log(data);
         setTime([...time, data]);
         setTHours([...tHours, data.hours]);
         setTMinutes([...tMinutes, data.minutes]);
@@ -114,9 +115,19 @@ const Home = () => {
             </form>
             {
                 time.length > 0 && <div className='text-center'>
-                    {/* show times */}
+                    {/* show statement */}
                     {projects?.map((p, index) => <div key={index}>
-                        <h1 className='text-2xl mt-5'>Project: {p}</h1>
+                        <h1 className='text-2xl mt-5'>Project: <span className='text-teal-600 font-semibold'>{p} </span>
+                            {/* hours calculation for each project */}
+                            (<span className='text-teal-600'>{
+
+                                Math.floor((time.filter(t => t.projectName === p).reduce((a, b) => a + parseInt(b.hours), 0) + (time.filter(t => t.projectName === p).reduce((a, b) => a + parseInt(b.minutes), 0) / 60)))
+
+                            }</span>h <span className='text-teal-600'>{
+
+                                Math.floor((time.filter(t => t.projectName === p).reduce((a, b) => a + parseInt(b.minutes), 0) % 60))
+
+                            }</span>min)</h1>
                         {time.map((t, index) =>
                             (t.projectName === p) &&
                             <div key={index}>
