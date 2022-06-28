@@ -48,7 +48,9 @@ const Home = () => {
         const confirm = window.confirm(`Are you sure want to delete ${title}-${hours}hours, ${minutes}minutes of Project:${projectName}`)
         if (confirm) {
             projects.splice(index, 1);
-            setProjects([...projects])
+            setProjects([...projects]);
+            setPayment(0);
+            hourlyRate.current.value = '';
         }
     }
 
