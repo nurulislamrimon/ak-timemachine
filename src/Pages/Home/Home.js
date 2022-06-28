@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 const Home = () => {
     const [projects, setProjects] = useState([]);
@@ -12,6 +13,13 @@ const Home = () => {
     // form hook
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
+
+    const copyText = (event) => {
+        navigator.clipboard.writeText(event.target.innerText);
+        toast('Project name copied to clipboard', {
+            position: toast.POSITION.TOP_CENTER
+        })
+    }
 
     // const handleProjectName = e => {
     //     prNameInput.current.value = e?.target?.value;
@@ -26,6 +34,7 @@ const Home = () => {
         if (!data.title) {
             data.title = 'Untitled';
         }
+
         setProjects([...projects, data]);
         const isAlreadyInProject = projectsNames.find(p => p === data.projectName)
         if (isAlreadyInProject) {
@@ -141,7 +150,8 @@ const Home = () => {
                 projects.length > 0 && <div>
                     {/* show statement */}
                     {projectsNames?.map((p, index) => <div key={index}>
-                        <div className='text-2xl mt-5 flex justify-between border-b-2 p-2'> <span className='text-teal-600 font-semibold '>{p} </span>
+                        <div className='text-2xl mt-5 flex justify-between border-b-2 p-2'>
+                            <span className='text-teal-600 font-semibold cursor-copy' onClick={copyText}>{p} </span>
                             {/* hours calculation for each project */}
                             <div>
                                 (<span className='text-teal-600'>{
@@ -197,6 +207,7 @@ const Home = () => {
                         <div className="form-control w-full max-w-xs mx-auto mt-5 lg:mt-16">
                             <label htmlFor="hourlyRate" className="label">Payment for an hour</label>
                             <input onChange={totalPayment} ref={hourlyRate} type="number" autoFocus placeholder="Enter hourly rate here" className="input input-bordered w-full" />
+
                         </div>
                         <h1 className='text-3xl text-center'>Your total payment: ${payment?.toFixed(2)}</h1>
                     </div>
