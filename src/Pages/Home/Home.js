@@ -5,17 +5,16 @@ const Home = () => {
     const [projects, setProjects] = useState([]);
     const [projectsNames, setProjectsNames] = useState([]);
     const [payment, setPayment] = useState(0);
-    const getProjectName = useRef(0);
+    const prNameInput = useRef('');
     const hourlyRate = useRef(0);
     const totalHours = useRef(0);
     const totalMinutes = useRef(0);
     // form hook
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    // console.log(getProjectName.current);
 
     const handleProjectName = e => {
-        getProjectName.current = e?.target?.value;
+        prNameInput.current.value = e?.target?.value;
     }
 
     const onSubmit = (data) => {
@@ -58,14 +57,11 @@ const Home = () => {
             setProjects([...projects]);
             const isProjectExist = projects.find(p => p.projectName === removedItem[0].projectName);
             if (!isProjectExist) {
-                // console.log(removedItem[0].projectName)
                 const pNIndex = projectsNames.indexOf(removedItem[0].projectName);
                 projectsNames.splice(pNIndex, 1);
                 setProjectsNames([...projectsNames]);
 
             }
-            // console.log(projects.indexOf(removedItem[0]))
-            // console.log(removedItem[0].projectName)
             setPayment(0);
             hourlyRate.current.value = '';
         }
@@ -78,11 +74,11 @@ const Home = () => {
                 <div className="form-control w-full max-w-xs mx-auto flex justify-center ">
                     <label htmlFor="projectName" className="label">Project Name</label>
                     <div className='flex border rounded-lg'>
-                        <input type="text" ref={getProjectName} autoFocus {
+                        <input type="text" {
                             ...register("projectName", {
                                 // required: true
 
-                            })} placeholder="Enter project name here" className="input w-full" />
+                            })} placeholder="Enter project name here" ref={prNameInput} className="input w-full" />
                     </div>
 
                     {errors.projectName?.type === 'required' &&
