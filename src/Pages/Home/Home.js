@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const Home = () => {
@@ -11,9 +11,8 @@ const Home = () => {
     // form hook
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-
     const onSubmit = (data) => {
-        data.id = projects.length + 1;
+        data.id = projects.length;
 
         if (!data.projectName) {
             data.projectName = 'No Name';
@@ -41,6 +40,15 @@ const Home = () => {
         if (confirm) {
             setProjects([]);
             setProjectsNames([]);
+        }
+    }
+    const handleDeleteItem = id => {
+        const index = projects.findIndex(p => p.id === id);
+        const { projectName, title, hours, minutes } = projects[index];
+        const confirm = window.confirm(`Are you sure want to delete ${title}-${hours}hours, ${minutes}minutes of Project:${projectName}`)
+        if (confirm) {
+            projects.splice(index, 1);
+            setProjects([...projects])
         }
     }
 
@@ -126,7 +134,7 @@ const Home = () => {
                         {projects.map((t, index) =>
                             (t.projectName === p) &&
                             <div key={index}>
-                                <h3 className='text-xl mt-2'> {t.title} - {t.hours}<small>hours</small>, {t.minutes}<small>minutes</small></h3>
+                                <h3 className='text-xl mt-2 flex justify-center items-center'> {t.title} - {t.hours}<small>hours</small>, {t.minutes}<small>minutes</small> <span onClick={() => handleDeleteItem(t.id)} className='material-icons hover:text-red-600 cursor-pointer'>delete</span></h3>
                             </div>)
                         }
                     </div>)}
