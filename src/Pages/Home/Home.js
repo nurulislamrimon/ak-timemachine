@@ -1,15 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const Home = () => {
     const [projects, setProjects] = useState([]);
     const [projectsNames, setProjectsNames] = useState([]);
     const [payment, setPayment] = useState(0);
+    const getProjectName = useRef(0);
     const hourlyRate = useRef(0);
     const totalHours = useRef(0);
     const totalMinutes = useRef(0);
     // form hook
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+    // console.log(getProjectName.current);
+
+    const handleProjectName = e => {
+        getProjectName.current = e?.target?.value;
+    }
 
     const onSubmit = (data) => {
         data.id = projects.length;
@@ -43,12 +50,22 @@ const Home = () => {
         }
     }
     const handleDeleteItem = id => {
-        const index = projects.findIndex(p => p.id === id);
+        const index = projects.indexOf(id);
         const { projectName, title, hours, minutes } = projects[index];
         const confirm = window.confirm(`Are you sure want to delete ${title}-${hours}hours, ${minutes}minutes of Project:${projectName}`)
         if (confirm) {
-            projects.splice(index, 1);
+            const removedItem = projects.splice(index, 1);
             setProjects([...projects]);
+            const isProjectExist = projects.find(p => p.projectName === removedItem[0].projectName);
+            if (!isProjectExist) {
+                // console.log(removedItem[0].projectName)
+                const pNIndex = projectsNames.indexOf(removedItem[0].projectName);
+                projectsNames.splice(pNIndex, 1);
+                setProjectsNames([...projectsNames]);
+
+            }
+            // console.log(projects.indexOf(removedItem[0]))
+            // console.log(removedItem[0].projectName)
             setPayment(0);
             hourlyRate.current.value = '';
         }
@@ -61,7 +78,7 @@ const Home = () => {
                 <div className="form-control w-full max-w-xs mx-auto flex justify-center ">
                     <label htmlFor="projectName" className="label">Project Name</label>
                     <div className='flex border rounded-lg'>
-                        <input type="text" autoComplete='on' autoFocus {
+                        <input type="text" ref={getProjectName} autoFocus {
                             ...register("projectName", {
                                 // required: true
 
@@ -72,11 +89,19 @@ const Home = () => {
                         <label className="label">
                             <span className="label-text-alt text-red-500">Please enter a project name</span>
                         </label>}
+
+                    <select onChange={handleProjectName} name="projectOption" id="">
+                        <option>Select an option</option>
+                        {projectsNames.map((p, index) =>
+                            <option key={index} value={p}>{p}</option>
+                        )}
+                    </select>
+
                 </div>
                 {/* title input */}
                 <div className="form-control w-full max-w-xs mx-auto">
                     <label htmlFor="title" className="label">Title</label>
-                    <input type="text" autoComplete='on' {
+                    <input type="text" {
                         ...register("title", {
                             // required: true
 
@@ -136,7 +161,7 @@ const Home = () => {
                         {projects.map((t, index) =>
                             (t.projectName === p) &&
                             <div key={index}>
-                                <h3 className='text-xl mt-2 flex justify-center items-center'> {t.title} - {t.hours}<small>hours</small>, {t.minutes}<small>minutes</small> <span onClick={() => handleDeleteItem(t.id)} className='material-icons hover:text-red-600 cursor-pointer'>delete</span></h3>
+                                <h3 className='text-xl mt-2 flex justify-center items-center'> {t.title} - {t.hours}<small>hours</small>, {t.minutes}<small>minutes</small> <span onClick={() => handleDeleteItem(projects.find(p => p.id === t.id))} className='material-icons hover:text-red-600 cursor-pointer'>delete</span></h3>
                             </div>)
                         }
                     </div>)}
